@@ -1,25 +1,28 @@
-NLP_Transformers_Fine_Tuning_Commonsense_and_Sentence_Similarity
+# 🧠 NLP Transformers: Fine-Tuning, Commonsense & Sentence Similarity
 
 ## Description
 
-This project contains a deep learning notebook that explores two tasks using transformer models:
+This project explores the fine-tuning and application of transformer-based language models on two core NLP tasks:
 
-1. **Sentiment classification** using the Yelp Polarity dataset.
-2. **Commonsense reasoning** using the Winogrande dataset with two modeling strategies: binary classification and Natural Language Inference (NLI).
+1. **Sentiment Classification** – Using the [Yelp Polarity](https://huggingface.co/datasets/yelp_polarity) dataset to train and evaluate binary sentiment classifiers.
+2. **Commonsense Reasoning** – Using the [Winogrande](https://huggingface.co/datasets/winogrande) and [PIQA](https://huggingface.co/datasets/piqa) datasets to reformulate reasoning problems as:
+   - **Binary classification**
+   - **Natural Language Inference (NLI)**
+   - **Semantic similarity** with sentence embeddings
 
-All code is implemented in a single Jupyter notebook using Hugging Face Transformers and Datasets libraries.
+All experiments are implemented in a single Jupyter notebook using the Hugging Face ecosystem (`transformers`, `datasets`, `Trainer`, and `pipelines`).
 
 ---
 
-## Requirements
+## Setup
 
-Install all required libraries with:
+Install all required packages:
 
 ```bash
 pip install torch transformers datasets sentence-transformers scikit-learn numpy pandas
 ```
 
-Tested with:
+**Tested with:**
 - Python 3.10
 - PyTorch 2.2
 - Transformers 4.40
@@ -29,48 +32,62 @@ Tested with:
 
 ---
 
+## Task 1 – Sentiment Classification (Yelp)
 
-## Task 1 – Yelp Polarity Sentiment Classification
+**Goal:** Fine-tune transformer models to classify restaurant reviews as either positive or negative.
 
-**Objective:** Train a transformer-based model to classify reviews as positive or negative.
-
-### Workflow:
-- Load the Yelp Polarity dataset using Hugging Face `datasets`.
-- Explore data: review text and polarity labels (0: negative, 1: positive).
-- Tokenize text using `AutoTokenizer` with max_length 128.
-- Use models such as `bert-base-uncased`, `roberta-base`, etc.
-- Fine-tune using the Hugging Face `Trainer` API:
-  - Adjust hyperparameters: learning rate, batch size, epochs
-  - Evaluate accuracy on test set using `compute_metrics` function
-- Visualize training and validation loss
-- Perform hyperparameter tuning (learning rate, batch size, epochs)
-- Compare results across different models
-
-
-## Task 2 – Winogrande Commonsense Reasoning
-
-**Objective:** Predict the correct completion in a sentence that requires common sense knowledge.
-
-### A. Binary Classification Approach
-- Replace blank with each choice
-- Format as `[CLS] sentence_with_choice [SEP]`
-- Fine-tune `roberta-large` as binary classifier
-- Predict based on which sentence yields higher probability
-
-### B. Natural Language Inference (NLI) Approach
-- Treat the original sentence as a premise
-- Fill the blank with each choice to create two hypotheses
-- Label: entailment for correct, contradiction for incorrect
-- Train a model (e.g., `deberta-v3-large`) to classify entailment
-- Choose the hypothesis with highest entailment probability
+### Steps:
+- Load and preprocess the Yelp Polarity dataset
+- Tokenize using `AutoTokenizer` (e.g., BERT, RoBERTa)
+- Fine-tune using Hugging Face’s `Trainer` API
+- Evaluate using accuracy and confusion matrix
+- Experiment with different hyperparameters:
+  - Learning rate
+  - Batch size
+  - Number of epochs
+  - Weight decay
+- Optional: Compare full fine-tuning vs. sentence embeddings + logistic regression
 
 ---
 
+## Task 2 – Commonsense Reasoning (Winogrande & PIQA)
 
-The project was created as part of the course "Neural Networks and Deep Learning" at School of Electrical and Computer Engineering, NTUA and the aim of this work is to present my approach to the problems given. 
+**Goal:** Use pretrained models to solve fill-in-the-blank problems that require commonsense knowledge.
 
+### A. Binary Classification Approach
+- Replace the blank with each candidate
+- Classify which sentence is more likely to be valid using a binary classifier
 
+### B. NLI Reformulation
+- Treat original sentence as **premise**, and candidate-filled sentences as **hypotheses**
+- Use an NLI model to predict **entailment** vs **contradiction**
+- Select the hypothesis with the highest entailment probability
+
+### C. Semantic Similarity with Sentence Transformers
+- Generate sentence embeddings using models like `sentence-t5-base`
+- Use cosine similarity to score candidate answers against a reference (e.g., “best answer”)
+- Evaluate alignment between semantic similarity and classification accuracy
+
+---
+
+## Evaluation Summary
+
+- Binary and NLI approaches were compared across models (`roberta-large`, `bart-large-mnli`, `deberta-v3-base`)
+- Sentence similarity scores from models like `all-mpnet-base-v2` and `sentence-t5-base` correlated with classification outcomes
+- Semantic similarity proved helpful in evaluating generated or alternative answers when gold labels were ambiguous
+
+---
+
+## Educational Context
+
+This notebook was developed as part of the course **"Neural Networks and Deep Learning"**  
+📍 School of Electrical and Computer Engineering, NTUA  
+The objective was to explore real-world applications of pretrained models through fine-tuning and zero-shot reasoning.
+
+---
 
 ## Author
 
 **Nikolaos Katsaidonis**  
+Electrical & Computer Engineering, NTUA
+
