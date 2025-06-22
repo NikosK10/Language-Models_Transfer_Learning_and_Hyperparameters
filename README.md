@@ -67,6 +67,9 @@ Tested with:
 ---
 
 
+The project was created as part of the course "Neural Networks and Deep Learning" at School of Electrical and Computer Engineering, NTUA and the aim of this work is to present my approach to the problems given. 
+
+
 
 ## Author
 
